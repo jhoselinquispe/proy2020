@@ -4,6 +4,7 @@ var CLIENTE = require('../database/cliente');
 var RESTAURANT = require('../database/restaurant');
 var MENUS = require('../database/menu');
 var ORDEN = require('../database/orden');
+const e = require('express');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.status(200).json({
@@ -13,20 +14,19 @@ router.get('/', function(req, res, next) {
 
 /* SERVICIOS PARA RESTAURANTS */
 router.post('/restaurant',(req,res,next)=>{
-  var datos = req.body;
-  var restaurant = {};
-  restaurant["Nombre"] = datos.Nombre;
-  restaurant["Nit"] = datos.Nit;
-  restaurant["Propietario"] = datos.Propietario;
-  restaurant["Calle"] = datos.Calle;
-  restaurant["Telefono"] = datos.Telefono;
-  restaurant["Log"] = datos.Log;
-  restaurant["Lat"] = datos.Lat;
-  restaurant["Logo"] = datos.Logo;
-  restaurant["Fecharegistro"] = new Date();
-  restaurant["Fotolugar"] = datos.Fotolugar;
-  var newrestaurant = new RESTAURANT(restaurant);
-  newrestaurant.save().then(()=>{
+  var datosREST = req.body;
+  var restaurantDB = new RESTAURANT(datosREST);
+  restaurantDB.save((errors,docs)=>{
+    if(errors){
+      var errors = errors.errors;
+      var key = Object.keys(errors);
+      var msn = {};
+      for (var i=0;i<key.length;i++){
+        msn[key[i]] = errors[key[i]].message;
+      }
+      res.status(500).json(msn);
+      return;
+    }
     res.status(200).json ({"msn":"Usuario Registrado"});
   });
 });
@@ -39,15 +39,19 @@ router.get('/restaurant', function(req, res, next) {
 
 /* SERVICIOS PARA MENUS */
 router.post('/menus',(req,res,next)=>{
-  var datos = req.body;
-  var menus = {};
-  menus["Nombre"] = datos.Nombre;
-  menus["Precio"] = datos.Precio;
-  menus["Descripcion"] = datos.Descripcion;
-  menus["Fecharegistro"] = new Date();
-  menus["Fotoproducto"] = datos.Fotoproducto;
-  var newmenus = new MENUS (menus);
-  newmenus.save().then(()=>{
+  var datosREST = req.body;
+  var menusDB = new MENUS (datosREST);
+  menusDB.save((errors,docs)=>{
+    if(errors){
+      var errors = errors.errors;
+      var key = Object.keys(errors);
+      var msn = {};
+      for (var i=0;i<key.length;i++){
+        msn[key[i]] = errors[key[i]].message;
+      }     
+      res.status(500).json(msn);
+      return;
+    }
     res.status(200).json({
       "msn" : "Menu Registrado con exito...>!!!"
     });
@@ -61,20 +65,21 @@ router.get('/menus',(req,res,next)=>{
 
 /* SERVICIOS PARA ORDENES */
 router.post('/orden',(req,res,next)=>{
-  var datos = req.body;
-  var Lugardeenvio = datos.Lugardeenvio.split(",");
-  var orden = {};
-  orden["Idmenu"]=datos.Idmenu;
-  orden["Idrestaurant"]=datos.Idrestaurant;
-  orden["Cantidad"]=datos.Cantidad;
-  orden["Idcliente"]=datos.Idcliente;
-  orden["Lugardeenvio"]=Lugardeenvio;
-  orden["Pagototal"]=datos.Pagototal;
-  var neworden = new ORDEN(orden);
-  neworden.save().then(()=>{
+  var datosREST = req.body;
+  var ordenDB = new ORDEN(datosREST);
+  ordenDB.save((errors,docs)=>{
+    if(errors){
+      var errors = errors.errors;
+      var key = Object.keys(errors);
+      var msn = {};
+      for (var i=0;i<key.length;i++){
+        msn[key[i]] = errors[key[i]].message;
+          }
+      res.status(500).json(msn); 
+      return;
+    }
     res.status(200).json({"msn" : "Orden registrada correctamente..!!"});
   });
-  /*idmenu[], idrestorant[], cantidad[], idcliente, lugardeenvio(lat, long), pagototal */
 });
 router.get('/orden',(req,res,next)=>{
   ORDEN.find({},(err,docs)=>{
@@ -84,16 +89,19 @@ router.get('/orden',(req,res,next)=>{
 
 
 router.post('/cliente',(req, res, next)=>{
-    var datos = req.body;
-    var cliente = {};
-    cliente["Nombre"] = datos.Nombre;
-    cliente["Apellido"] = datos.Apellido;
-    cliente["Edad"] = datos.Edad;
-    cliente["Fecharegistro"] = new Date;
-    cliente["Ci"] = datos.Ci;
-    cliente["Correo"] = datos.Correo;
-    var newcliente = new CLIENTE(cliente);
-    newcliente.save().then(()=>{
+    var datosREST = req.body;
+    var clienteDB = new CLIENTE(datosREST);
+    clienteDB.save((errors,docs)=>{
+      if(errors){
+        var errors = errors.errors;
+        var key = Object.keys(errors);
+        var msn = {};
+        for (var i=0;i<key.length;i++){
+          msn[key[i]] = errors[key[i]].message;
+        }
+        res.status(500).json(msn);
+        return;
+      }      
       res.status(200).json({"msn" : "Cliente registrada correctamente..!!"});
     });
 });
