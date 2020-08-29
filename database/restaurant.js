@@ -6,7 +6,7 @@ var RESTAURANTSCHEMA = mongoose.model('restaurant',{
         required: [true, "El nombre del restaurant es REQUERIDO."]
     },
     Nit: {
-        type: Number,
+        type: String,
         required: [true, "El CI o NIT son REQUERIDOS."]
     },
     Propietario: {

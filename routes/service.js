@@ -5,10 +5,11 @@ var RESTAURANT = require('../database/restaurant');
 var MENUS = require('../database/menu');
 var ORDEN = require('../database/orden');
 const e = require('express');
+const { DocumentProvider } = require('mongoose');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.status(200).json({
-      "mns" :   "Conexion a Servicios Completa"
+      msn :   "Conexion a Servicios Completa"
   });
 });
 
@@ -16,9 +17,9 @@ router.get('/', function(req, res, next) {
 router.post('/restaurant',(req,res,next)=>{
   var datosREST = req.body;
   var restaurantDB = new RESTAURANT(datosREST);
-  restaurantDB.save((errors,docs)=>{
-    if(errors){
-      var errors = errors.errors;
+  restaurantDB.save((err,docs)=>{
+    if(err){
+      var errors = err.errors;
       var key = Object.keys(errors);
       var msn = {};
       for (var i=0;i<key.length;i++){
@@ -27,23 +28,51 @@ router.post('/restaurant',(req,res,next)=>{
       res.status(500).json(msn);
       return;
     }
-    res.status(200).json ({"msn":"Usuario Registrado"});
+    res.status(200).json ({msn:"Usuario Registrado"});
   });
 });
-router.get('/restaurant', function(req, res, next) {
-  RESTAURANT.find({},(err,docs)=>{
-    res.status(200).json(docs);
+router.get('/restaurant',(req, res, next)=> {
+  var params = req.query;
+  var filter = {};
+  var select = {};
+  var order = {};
+  if(params.nombre != null){
+    var expresion = new RegExp(params.nombre);
+    filter["Nombre"] = expresion;
+  };
+  if(params.nit != null){
+    var expresion = new RegExp(params.nit);
+    parseInt(expresion);
+    filter["Nit"] = expresion;
+  };
+  if(params.propietario != null){
+    var expresion = new RegExp(params.propietario);
+    filter["Propietario"] = expresion;
+  };
+  if(params.filters != null){
+    var select = params.filters.toString().replace(/,/g, " ");
+  };
+  if(params.order != null){
+    var data = params.order.split(",");
+    var number = parseInt(data[1]);
+    order[data[0]] = number;
+  };
+  RESTAURANT.find(filter).select(select).sort(order).exec((err,docs)=>{
+    if (err){
+      res.status(500).json({msn : "Error en el servidor."});
+      return;
+    };
+    res.status(200).json({docs});
+    return;
   });
 });
-
-
 /* SERVICIOS PARA MENUS */
 router.post('/menus',(req,res,next)=>{
   var datosREST = req.body;
   var menusDB = new MENUS (datosREST);
-  menusDB.save((errors,docs)=>{
-    if(errors){
-      var errors = errors.errors;
+  menusDB.save((err,docs)=>{
+    if(err){
+      var errors = err.errors;
       var key = Object.keys(errors);
       var msn = {};
       for (var i=0;i<key.length;i++){
@@ -57,19 +86,52 @@ router.post('/menus',(req,res,next)=>{
     });
   });
 });
-router.get('/menus',(req,res,next)=>{
-  MENUS.find({},(err,docs)=>{
-    res.status(200).json(docs);
+router.get('/menus',(req, res, next)=> {
+  var params = req.query;
+  var filter = {};
+  var select = {};
+  var aux = {};
+  var order = {};
+  if(params.nombre != null){
+    var expresion = new RegExp(params.nombre);
+    filter["Nombre"] = expresion;
+  };
+  if(params.filters != null){
+    var select = params.filters.toString().replace(/,/g," ");
+  };
+  if(params.preciogt != null){
+    var gt = parseInt(params.preciogt);
+    aux["$gt"] = gt;
+  };
+  if(params.preciolt != null){
+    var lt = parseInt(params.preciolt);
+    aux["$lt"] = lt;
+  };
+  if(aux != {}){
+    filter["Precio"] = aux;
+    //console.log(filter);
+  };
+  if(params.order != null){
+    var data = params.order.split(",");
+    var number = parseInt(data[1]);
+    order[data[0]] = number;
+  };
+  MENUS.find(filter).select(select).sort(order).exec((err,docs)=>{
+    if (err){
+      res.status(500).json({msn : "Error en el servidor."});
+      return;
+    };
+    res.status(200).json({docs});
+    return;
   });
 });
-
 /* SERVICIOS PARA ORDENES */
 router.post('/orden',(req,res,next)=>{
   var datosREST = req.body;
   var ordenDB = new ORDEN(datosREST);
-  ordenDB.save((errors,docs)=>{
-    if(errors){
-      var errors = errors.errors;
+  ordenDB.save((err,docs)=>{
+    if(err){
+      var errors = err.errors;
       var key = Object.keys(errors);
       var msn = {};
       for (var i=0;i<key.length;i++){
@@ -81,33 +143,110 @@ router.post('/orden',(req,res,next)=>{
     res.status(200).json({"msn" : "Orden registrada correctamente..!!"});
   });
 });
-router.get('/orden',(req,res,next)=>{
-  ORDEN.find({},(err,docs)=>{
-    res.status(200).json(docs);
+router.get('/orden',(req, res, next)=> {
+  var params = req.query;
+  var filter = {};
+  var select = {};
+  var order = {};
+  if(params.cantidad != null){
+    var expresion = parseInt(params.cantidad);
+    filter["Cantidad"] = expresion;
+  };
+  if(params.pago != null){
+    var expresion = parseInt(params.pago);
+    filter["Pagototal"] = expresion;
+  };
+  if(params.lugar != null){
+    var expresion = new RegExp(params.lugar);
+    filter["Lugardeenvio"] = expresion;
+  };
+  if(params.filters != null){
+    var select = params.filters.toString().replace(/,/g," ");
+  };
+  if(params.order != null){
+    var data = params.order.split(",");
+    var number = parseInt(data[1]);
+    order[data[0]] = number;
+  };
+  ORDEN.find(filter).select(select).sort(order).exec((err,docs)=>{
+    if (err){
+      res.status(500).json({msn : "Error en el servidor."});
+      return;
+    };
+    res.status(200).json({docs});
+    return;
   });
 });
-
 
 router.post('/cliente',(req, res, next)=>{
     var datosREST = req.body;
     var clienteDB = new CLIENTE(datosREST);
-    clienteDB.save((errors,docs)=>{
-      if(errors){
-        var errors = errors.errors;
+    clienteDB.save((err,docs)=>{
+      if(err){
+        var errors = err.errors;
         var key = Object.keys(errors);
         var msn = {};
         for (var i=0;i<key.length;i++){
           msn[key[i]] = errors[key[i]].message;
         }
-        res.status(500).json(msn);
+        res.status(500).json(docs);
         return;
       }      
       res.status(200).json({"msn" : "Cliente registrada correctamente..!!"});
     });
 });
-router.get('/cliente',(req,res,next)=>{
-  CLIENTE.find({},(err,docs)=>{
-    res.status(200).json(docs);
+router.get('/cliente',(req, res, next)=> {
+  var params = req.query;
+  var filter = {};
+  var select = {};
+  var aux = {};
+  var order = {};
+  if(params.nombre != null){
+    var expresion = new RegExp(params.nombre);
+    filter["Nombre"] = expresion;
+    console.log(filter);
+  };
+  if(params.apellido != null){
+    var expresion = new RegExp(params.apellido);
+    filter["Apellido"] = expresion;
+    console.log(filter);
+  };
+  if(params.edad != null){
+    var expresion = parseInt(params.edad);
+    filter["Edad"] = expresion;
+    console.log(filter);
+  };
+  if(params.ci != null){
+    var expresion = new RegExp(params.ci);
+    filter["Ci"] = expresion;
+  };
+  if(params.filters != null){
+    var select = params.filters.toString().replace(/,/g," ");
+  };
+  if(params.edadgt != null){
+    var gt = parseInt(params.edadgt);
+    aux["$gt"] = gt;
+  };
+  if(params.edadlt != null){
+    var lt = parseInt(params.edadlt);
+    aux["$lt"] = lt;
+  };
+  if(aux != {}){
+    filter["Edad"] = aux;
+    //console.log(filter);
+  };
+  if(params.order != null){
+    var data = params.order.split(",");
+    var number = parseInt(data[1]);
+    order[data[0]] = number;
+  };
+  CLIENTE.find(filter).select(select).sort(order).exec((err,docs)=>{
+    if (err){
+      res.status(500).json({msn : "Error en el servidor."});
+      return;
+    };
+    res.status(200).json({docs});
+    return;
   });
 });
 module.exports = router;
