@@ -6,6 +6,7 @@ var MENUS = require('../database/menu');
 var ORDEN = require('../database/orden');
 const e = require('express');
 const { DocumentProvider } = require('mongoose');
+const { update } = require('../database/orden');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.status(200).json({
@@ -63,6 +64,30 @@ router.get('/restaurant',(req, res, next)=> {
       return;
     };
     res.status(200).json({docs});
+    return;
+  });
+});
+router.put('/restaurant',(req,res,next)=>{
+  var params = req.query;
+  var datos = req.body;
+  if(params.id == null){
+    res.status(300).json({msn:"El parametro id es Necesario."});
+    return;
+  };
+  var keylist = ["Nombre","Propietario","Calle","Telefono"];
+  var keys = Object.keys(datos);
+  var updateobjectdata = {};
+  for (var i=0;i<keys.length;i++){
+    if(keylist.indexOf(keys[i])>-1){
+      updateobjectdata[keys[i]] = datos[keys[i]];
+    }
+  }
+  RESTAURANT.updateOne({_id: params.id}, {$set: updateobjectdata},(err,docs)=>{
+    if(err){
+      res.status(300).json({msn:"Existen problemas en la base de datos."});
+      return;
+    }
+    res.status(200).json(docs);
     return;
   });
 });
@@ -125,6 +150,30 @@ router.get('/menus',(req, res, next)=> {
     return;
   });
 });
+router.put('/menus',(req,res,next)=>{
+  var params = req.query;
+  var datos = req.body;
+  if(params.id == null){
+    res.status(300).json({msn:"El parametro id es Necesario."});
+    return;
+  };
+  var keylist = ["Nombre","Precio","Descripcion","Fotoproducto"];
+  var keys = Object.keys(datos);
+  var updateobjectdata = {};
+  for (var i=0;i<keys.length;i++){
+    if(keylist.indexOf(keys[i])>-1){
+      updateobjectdata[keys[i]] = datos[keys[i]];
+    }
+  }
+  MENUS.updateOne({_id: params.id}, {$set: updateobjectdata},(err,docs)=>{
+    if(err){
+      res.status(300).json({msn:"Existen problemas en la base de datos."});
+      return;
+    }
+    res.status(200).json(docs);
+    return;
+  });
+});
 /* SERVICIOS PARA ORDENES */
 router.post('/orden',(req,res,next)=>{
   var datosREST = req.body;
@@ -177,7 +226,31 @@ router.get('/orden',(req, res, next)=> {
     return;
   });
 });
-
+router.put('/orden',(req,res,next)=>{
+  var params = req.query;
+  var datos = req.body;
+  if(params.id == null){
+    res.status(300).json({msn:"El parametro id es Necesario."});
+    return;
+  };
+  var keylist = ["Cantidad","Lugardeenvio"];
+  var keys = Object.keys(datos);
+  var updateobjectdata = {};
+  for (var i=0;i<keys.length;i++){
+    if(keylist.indexOf(keys[i])>-1){
+      updateobjectdata[keys[i]] = datos[keys[i]];
+    }
+  }
+  ORDEN.updateOne({_id: params.id}, {$set: updateobjectdata},(err,docs)=>{
+    if(err){
+      res.status(300).json({msn:"Existen problemas en la base de datos."});
+      return;
+    }
+    res.status(200).json(docs);
+    return;
+  });
+});
+//SERVICIOS PARA CLIENTES
 router.post('/cliente',(req, res, next)=>{
     var datosREST = req.body;
     var clienteDB = new CLIENTE(datosREST);
@@ -246,6 +319,30 @@ router.get('/cliente',(req, res, next)=> {
       return;
     };
     res.status(200).json({docs});
+    return;
+  });
+});
+router.put('/cliente',(req,res,next)=>{
+  var params = req.query;
+  var datos = req.body;
+  if(params.id == null){
+    res.status(300).json({msn:"El parametro id es Necesario."});
+    return;
+  };
+  var keylist = ["Nombre","Apellido","Edad"];
+  var keys = Object.keys(datos);
+  var updateobjectdata = {};
+  for (var i=0;i<keys.length;i++){
+    if(keylist.indexOf(keys[i])>-1){
+      updateobjectdata[keys[i]] = datos[keys[i]];
+    }
+  }
+  CLIENTE.updateOne({_id: params.id}, {$set: updateobjectdata},(err,docs)=>{
+    if(err){
+      res.status(300).json({msn:"Existen problemas en la base de datos."});
+      return;
+    }
+    res.status(200).json(docs);
     return;
   });
 });
