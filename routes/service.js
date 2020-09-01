@@ -91,6 +91,21 @@ router.put('/restaurant',(req,res,next)=>{
     return;
   });
 });
+router.delete('/restaurant',(req, res, next)=>{ 
+  var params = req.query;
+  if(params.id==null){
+    res.status(300).json({msn: "El parametro ID es necesario para eliminar"});
+    return;
+  }
+  RESTAURANT.remove({_id: params.id}, (err,docs)=>{
+    if(err){
+      res.status(500).json({msn: "Existen problemas en la BASE DE DATOS..."});
+      console.log(params.id);
+      return;
+    }
+    res.status(200).json(docs);
+  });
+});
 /* SERVICIOS PARA MENUS */
 router.post('/menus',(req,res,next)=>{
   var datosREST = req.body;
@@ -174,6 +189,21 @@ router.put('/menus',(req,res,next)=>{
     return;
   });
 });
+router.delete('/menus',(req, res, next)=>{ 
+  var params = req.query;
+  if(params.id==null){
+    res.status(300).json({msn: "El parametro ID es necesario para eliminar"});
+    return;
+  }
+  MENUS.remove({_id: params.id}, (err,docs)=>{
+    if(err){
+      res.status(500).json({msn: "Existen problemas en la BASE DE DATOS..."});
+      console.log(params.id);
+      return;
+    }
+    res.status(200).json(docs);
+  });
+});
 /* SERVICIOS PARA ORDENES */
 router.post('/orden',(req,res,next)=>{
   var datosREST = req.body;
@@ -248,6 +278,21 @@ router.put('/orden',(req,res,next)=>{
     }
     res.status(200).json(docs);
     return;
+  });
+});
+router.delete('/orden',(req, res, next)=>{ 
+  var params = req.query;
+  if(params.id==null){
+    res.status(300).json({msn: "El parametro ID es necesario para eliminar"});
+    return;
+  }
+  ORDEN.remove({_id: params.id}, (err,docs)=>{
+    if(err){
+      res.status(500).json({msn: "Existen problemas en la BASE DE DATOS..."});
+      console.log(params.id);
+      return;
+    }
+    res.status(200).json(docs);
   });
 });
 //SERVICIOS PARA CLIENTES
@@ -344,6 +389,21 @@ router.put('/cliente',(req,res,next)=>{
     }
     res.status(200).json(docs);
     return;
+  });
+});
+router.delete('/cliente',(req, res, next)=>{ 
+  var params = req.query;
+  if(params.id==null){
+    res.status(300).json({msn: "El parametro ID es necesario para eliminar"});
+    return;
+  }
+  CLIENTE.remove({_id: params.id}, (err,docs)=>{
+    if(err){
+      res.status(500).json({msn: "Existen problemas en la BASE DE DATOS..."});
+      console.log(params.id);
+      return;
+    }
+    res.status(200).json(docs);
   });
 });
 module.exports = router;
