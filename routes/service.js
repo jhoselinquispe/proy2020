@@ -427,4 +427,22 @@ router.delete('/cliente',(req, res, next)=>{
     res.status(200).json(docs);
   });
 });
+//SERVICIO PARA LOGIN
+router.post('/login', async (req,res)=>{
+  var params = req.body;
+  if(params.Correo==null){
+    res.status(300).json({msn : "El Correo es Necesario para logear"});
+    return;
+  }
+  if(params.Password==null){
+    res.status(300).json({msn : "Es necesario introducir su password"});
+    return;
+  }
+  var result = await CLIENTE.find({Correo : params.Correo, Password : sha1(params.Password)});
+  if(result.length == 1){
+    res.status(200).json({msn:"Bienvenido al Sistema "});
+    return;
+  }
+  res.status(300).json({msn:"Credenciales incorrectas"});
+});
 module.exports = router;
