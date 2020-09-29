@@ -33,24 +33,7 @@ var CLIENTESCHEMA = mongoose.model('cliente',{
         }
     },
     Password : {
-        type: String,
-        required: [true, "El Password es necesario"],
-        min: [6, "Debe contener minimo 6 caracteres"],
-        validate: {
-            validator: (value)=>{
-                if (!/[\w]+/.test(value)){
-                    return false;
-                }
-                if (!/[A-Z]+/.test(value)){
-                    return false;
-                }
-                if (!/[\@\#\!\$\%\^\&\*\(\)\_\+\-\=\]\[\{\}\;\:\'\"\/\?\.\>\,\<]+/.test(value)){
-                    return false;
-                }
-                return true;
-            },
-            message: props => `${props.value} Es necesario 1 MAYUSCULA y 1 caracter especial (!@#$%*...) como minimo para su Password.)`
-        }
+        type: String
     },
     Roles : {
         type: Array,

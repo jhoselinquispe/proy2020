@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var sha1 = require('sha1');
 var CLIENTE = require('../database/cliente');
 var RESTAURANT = require('../database/restaurant');
 var MENUS = require('../database/menu');
@@ -298,6 +299,26 @@ router.delete('/orden',(req, res, next)=>{
 //SERVICIOS PARA CLIENTES
 router.post('/cliente',(req, res, next)=>{
     var datosREST = req.body;
+    if(datosREST.Password == null){
+      res.status(300).json({msn : "El Password es necesario"});
+      return;
+    }
+    if (!/[\w]+/.test(datosREST.Password)){
+      res.status(300).json({msn : "Es necesario tener letras en su Password"});
+      return;
+    }
+    if (!/[A-Z]+/.test(datosREST.Password)){
+      res.status(300).json({msn : "Es Necesario 1 Mayuscula en su Password"});
+      return;
+    }
+    if (!/[\@\#\!\$\%\^\&\*\(\)\_\+\-\=\]\[\{\}\;\:\'\"\/\?\.\>\,\<]+/.test(datosREST.Password)){
+      res.status(300).json({msn : "Es necesario un simbolo para su Password."});
+      return;
+    }
+    console.log(datosREST.Password);
+    datosREST.Password= sha1(datosREST.Password);
+    console.log(datosREST.Password);
+    console.log(datosREST);
     var clienteDB = new CLIENTE(datosREST);
     clienteDB.save((err,docs)=>{
       if(err){
