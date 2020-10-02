@@ -1,4 +1,5 @@
 var mongoose = require('./connect');
+const router = require('../routes/service');
 var CLIENTESCHEMA = mongoose.model('cliente',{
     Nombre : {
         type: String,
@@ -40,4 +41,5 @@ var CLIENTESCHEMA = mongoose.model('cliente',{
         default: []
     }
 });
+
 module.exports = CLIENTESCHEMA;

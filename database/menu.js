@@ -4,14 +4,17 @@ const database = require('./connect');
 var MENUSCHEMA = mongoose.model('menus',{
     Nombre: {
         type: String,
-        required: [true, "Es necesario el nombre del Platillo"]
+        //required: [true, "Es necesario el nombre del Platillo"],
+        default: "None"
     },
     Precio: {
         type: Number,
-        required: [true, "Es necesario poner precio a su Platillo"]
+        //required: [true, "Es necesario poner precio a su Platillo"],
+        default: 10
     },
     Descripcion: {
         type: String,
+        default: "None"
     },
     Fecharegistro: {
         type: Date,
