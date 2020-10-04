@@ -17,19 +17,21 @@ router.get('/', function(req, res, next) {
 router.post('/login', async (req,res)=>{
   var params = req.body;
   if(params.Correo==null){
-    res.status(300).json({msn : "El Correo es Necesario para logear"});
+    res.status(200).json({msn : "El Correo es Necesario para logear"});
     return;
   }
   if(params.Password==null){
-    res.status(300).json({msn : "Es necesario introducir su password"});
+    res.status(200).json({msn : "Es necesario introducir su password"});
     return;
   }
   var result = await CLIENTE.find({Correo: params.Correo, Password: sha1(params.Password)});
   if(result.length == 1){
-    res.status(200).json({msn:"Bienvenido al Sistema "});
+    res.status(200).json({msn:"Bienvenido al Sistema"});
     return;
+  } else {
+    res.status(200).json({msn:"Credenciales incorrectas"});
   }
-  res.status(300).json({msn:"Credenciales incorrectas"});
+  
 });
 
 //SERVICIO PARA GUARDAR IMAGEN PRUEBA
@@ -66,4 +68,5 @@ router.post('/imglogo',(req,res)=>{
     res.status(200).json({"rutaLogo": rutaLogo});
     });
   });
+   
 module.exports = router;
