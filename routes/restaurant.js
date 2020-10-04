@@ -19,8 +19,10 @@ router.post('/restaurant',(req,res,next)=>{
       res.status(200).json ({msn:"Restaurant Creado Correctamente"});
     });
   });
-  router.get('/restaurant',(req, res, next)=> {
-    var params = req.query;
+
+  router.get("/restaurant", async(req, res) => {
+  /*router.get('/restaurant',(req, res, next)=> {
+    /*var params = req.query;
     var filter = {};
     var select = {};
     var order = {};
@@ -52,7 +54,9 @@ router.post('/restaurant',(req,res,next)=>{
       };
       res.status(200).json({docs});
       return;
-    });
+    });*/
+    var docs = await RESTAURANT.find();
+    res.status(200).json(docs);
   });
   router.put('/restaurant',(req,res,next)=>{
     var params = req.query;
