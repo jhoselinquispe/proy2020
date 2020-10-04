@@ -48,7 +48,7 @@ imagen.mv(pathMenu,(err) =>{
     return res.status(300).send({msn : "Error al subir la iamgen al servidor."})
   }
   var ruta = pathMenu.toString();
-  res.status(200).json({"rutaLogo": ruta});
+  res.status(200).json({"rutaMenu": ruta});
   });
 });
 
@@ -60,7 +60,7 @@ router.post('/imglogo',(req,res)=>{
   var pathRestaurant = path + "/" + sign + "_" + imagen.name.replace(/\s/g,"_");
   imagen.mv(pathRestaurant,(err) =>{
     if(err){
-      return res.status(300).send({msn : "Error al subir la iamgen al servidor."})
+      return res.status(300).send({msn : "Error al subir la imagen al servidor."})
     }
     var rutaLogo = pathRestaurant.toString();
     res.status(200).json({"rutaLogo": rutaLogo});
