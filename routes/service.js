@@ -50,20 +50,8 @@ imagen.mv(pathMenu,(err) =>{
   if(err){
     return res.status(300).send({msn : "Error al subir la iamgen al servidor."})
   }
-  /**  var rutaLogo = pathRestaurant.toString();
-    obj['Logo'] = rutaLogo;
-    var restaurantDB = new RESTAURANT(obj);
-    restaurantDB.save().then((docs,err)=>{
-      if(err){
-        console.log(restaurantDB);
-        res.status(300).send({msn : "Error al almacenar la imagen en laBD"});
-        return;
-      }
-
-      res.status(200).json ({msn:"Imagen de logo registrado"});
-    });*/
-  var ruta = pathMenu.toString();
-  obj['Fotoproducto'] = ruta;
+  var rutaMenu = pathMenu.toString();
+  /*obj['Fotoproducto'] = ruta;
   var menuDB = new MENUS(obj);
   menuDB.save().then((docs,err)=>{
     if(err){
@@ -71,8 +59,8 @@ imagen.mv(pathMenu,(err) =>{
       return;
     }
     res.status(200).json ({msn:"Imagen del menu registrado"});
-  });
-  
+  });*/
+  res.status(200).json({msn: rutaMenu});
   });
 });
 
@@ -88,16 +76,16 @@ router.post('/imglogo',(req,res)=>{
       res.status(300).send({msn : "Error al subir la imagen al servidor."});
     }
     var rutaLogo = pathRestaurant.toString();
-    obj['Logo'] = rutaLogo;
+    /*obj['Logo'] = rutaLogo;
     var restaurantDB = new RESTAURANT(obj);
     restaurantDB.save().then((docs,err)=>{
       if(err){
-        //console.log(restaurantDB);
         res.status(300).send({msn : "Error al almacenar la imagen en laBD"});
         return;
       }
       res.status(200).json ({msn:"Imagen de logo registrado"});
-    });
+    });*/
+    res.status(200).json({msn: rutaLogo});
     
     });
   });

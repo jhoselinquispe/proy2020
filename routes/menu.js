@@ -100,5 +100,20 @@ router.post('/menus',(req,res,next)=>{
       res.status(200).json(docs);
     });
   });
-
+  router.get('/getfilemenu',async(req,res)=>{
+    var parmas = req.query;
+    //console.log(parmas);
+    if(parmas == null){
+      res.status(300).json({msn : "Error es necesario un ID"});
+      return;
+    }
+    var idRes = parmas.id;
+    var imagenDB = await MENUS.find({_id: idRes});
+    if(imagenDB.length > 0){
+      var path = imagenDB[0].Fotoproducto;
+      res.sendFile(path);
+      return;
+    }
+    res.status(300).json({msn: "error en la peticion"});
+  });
 module.exports = router;

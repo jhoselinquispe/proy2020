@@ -99,6 +99,7 @@ router.post('/restaurant',(req,res,next)=>{
       res.status(200).json(docs);
     });
 });
+// SERVICIO PARA MOSTRAR LOGO POR ID
 router.get('/getfilerest',async(req,res)=>{
   var parmas = req.query;
   //console.log(parmas);
@@ -110,8 +111,8 @@ router.get('/getfilerest',async(req,res)=>{
   var imagenDB = await RESTAURANT.find({_id: idRes});
   if(imagenDB.length > 0){
     var path = imagenDB[0].Logo;
-    console.log(path);
-    console.log(imagenDB);
+    //console.log(path);
+    //console.log(imagenDB);
     res.sendFile(path);
     return;
   }
