@@ -44,13 +44,35 @@ var imagen = req.files.image;
 var path = __dirname.replace(/\/routes/g,("/img"));
 var date = new Date();
 var sign =  sha1(date.toString().substr(1,5));
+var obj = {};
 var pathMenu = path + "/" + sign + "_" + imagen.name.replace(/\s/g,"_");
 imagen.mv(pathMenu,(err) =>{
   if(err){
     return res.status(300).send({msn : "Error al subir la iamgen al servidor."})
   }
+  /**  var rutaLogo = pathRestaurant.toString();
+    obj['Logo'] = rutaLogo;
+    var restaurantDB = new RESTAURANT(obj);
+    restaurantDB.save().then((docs,err)=>{
+      if(err){
+        console.log(restaurantDB);
+        res.status(300).send({msn : "Error al almacenar la imagen en laBD"});
+        return;
+      }
+
+      res.status(200).json ({msn:"Imagen de logo registrado"});
+    });*/
   var ruta = pathMenu.toString();
-  res.status(200).json({"rutaMenu": ruta});
+  obj['Fotoproducto'] = ruta;
+  var menuDB = new MENUS(obj);
+  menuDB.save().then((docs,err)=>{
+    if(err){
+      res.status(300).send({msn : "Error al almacenar la imagen en laBD"});
+      return;
+    }
+    res.status(200).json ({msn:"Imagen del menu registrado"});
+  });
+  
   });
 });
 
@@ -60,12 +82,24 @@ router.post('/imglogo',(req,res)=>{
   var date = new Date();
   var sign =  sha1(date.toString().substr(1,5));
   var pathRestaurant = path + "/" + sign + "_" + imagen.name.replace(/\s/g,"_");
-  imagen.mv(pathRestaurant,(err) =>{
+  obj = {}
+  imagen.mv(pathRestaurant,(docs, err) =>{
     if(err){
-      return res.status(300).send({msn : "Error al subir la imagen al servidor."})
+      res.status(300).send({msn : "Error al subir la imagen al servidor."});
     }
     var rutaLogo = pathRestaurant.toString();
-    res.status(200).json({"rutaLogo": rutaLogo});
+    obj['Logo'] = rutaLogo;
+    var restaurantDB = new RESTAURANT(obj);
+    restaurantDB.save().then((docs,err)=>{
+      if(err){
+        //console.log(restaurantDB);
+        res.status(300).send({msn : "Error al almacenar la imagen en laBD"});
+        return;
+      }
+
+      res.status(200).json ({msn:"Imagen de logo registrado"});
+    });
+    
     });
   });
    
