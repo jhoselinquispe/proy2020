@@ -44,12 +44,13 @@ router.post('/orden',(req,res,next)=>{
       var number = parseInt(data[1]);
       order[data[0]] = number;
     };
-    ORDEN.find(filter).select(select).sort(order).exec((err,docs)=>{
+    ORDEN.find(filter).select(select).sort(order).exec((err,doc)=>{
       if (err){
         res.status(500).json({msn : "Error en el servidor."});
         return;
       };
-      res.status(200).json({docs});
+      res.status(200).json(doc);
+      //console.log(doc);
       return;
     });
   });

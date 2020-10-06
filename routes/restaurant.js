@@ -1,4 +1,5 @@
 var express = require('express');
+const { readyState, collection } = require('../database/connect');
 var router = express.Router();
 var RESTAURANT = require('../database/restaurant');
 /* SERVICIOS PARA RESTAURANTS */
@@ -21,8 +22,8 @@ router.post('/restaurant',(req,res,next)=>{
   });
 
   router.get("/restaurant", async(req, res) => {
-  /*router.get('/restaurant',(req, res, next)=> {
-    /*var params = req.query;
+  //router.get('/restaurant',(req, res, next)=> {
+    var params = req.query;
     var filter = {};
     var select = {};
     var order = {};
@@ -47,16 +48,17 @@ router.post('/restaurant',(req,res,next)=>{
       var number = parseInt(data[1]);
       order[data[0]] = number;
     };
-    RESTAURANT.find(filter).select(select).sort(order).exec((err,docs)=>{
+    RESTAURANT.find(filter).select(select).sort(order).exec((err,doc)=>{
       if (err){
         res.status(500).json({msn : "Error en el servidor."});
         return;
       };
-      res.status(200).json({docs});
+      res.status(200).json(doc);
+      //console.log(doc);
       return;
-    });*/
-    var docs = await RESTAURANT.find();
-    res.status(200).json(docs);
+    });
+    //var docs = await RESTAURANT.find();
+    //res.status(200).json(docs);
   });
   router.put('/restaurant',(req,res,next)=>{
     var params = req.query;
@@ -96,5 +98,23 @@ router.post('/restaurant',(req,res,next)=>{
       }
       res.status(200).json(docs);
     });
+});
+router.get('/getfilerest',async(req,res)=>{
+  var parmas = req.query;
+  //console.log(parmas);
+  if(parmas == null){
+    res.status(300).json({msn : "Error es necesario un ID"});
+    return;
+  }
+  var idRes = parmas.id;
+  var imagenDB = await RESTAURANT.find({_id: idRes});
+  if(imagenDB.length > 0){
+    var path = imagenDB[0].Logo;
+    console.log(path);
+    console.log(imagenDB);
+    res.sendFile(path);
+    return;
+  }
+  res.status(300).json({msn: "error en la peticion"});
 });
 module.exports = router;

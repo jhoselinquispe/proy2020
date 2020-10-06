@@ -96,7 +96,6 @@ router.post('/imglogo',(req,res)=>{
         res.status(300).send({msn : "Error al almacenar la imagen en laBD"});
         return;
       }
-
       res.status(200).json ({msn:"Imagen de logo registrado"});
     });
     

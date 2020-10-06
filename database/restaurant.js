@@ -3,28 +3,28 @@ var mongoose = require('./connect');
 var RESTAURANTSCHEMA = mongoose.model('restaurant',{
     Nombre: {
         type: String,
-        required: [true, "El nombre del restaurant es REQUERIDO."],
+        //required: [true, "El nombre del restaurant es REQUERIDO."],
         default: "None"
     },
     Nit: {
         type: String,
-        required: [true, "El CI o NIT son REQUERIDOS."],
+        //required: [true, "El CI o NIT son REQUERIDOS."],
         default: "None"
     },
     Propietario: {
         type: String,
-        required: [true, "El nombre del Propietario es requerido"],
+        //required: [true, "El nombre del Propietario es requerido"],
         default: "None"
     },
     Calle: {
         type: String,
-        required: [true, "Es requerida la direccion de su establecimiento o restaurant"],
+        //required: [true, "Es requerida la direccion de su establecimiento o restaurant"],
         default: "None"
     },
     Telefono: {
         type: Number,
-        required: [true, "Es necesario su numero para resivir los pedidos"],
-        default: 00000
+        //required: [true, "Es necesario su numero para resivir los pedidos"],
+        default: 0
     },
     Logo: {
         type:String

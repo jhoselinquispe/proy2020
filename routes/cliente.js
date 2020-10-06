@@ -83,12 +83,13 @@ router.get('/cliente',(req, res, next)=> {
     var number = parseInt(data[1]);
     order[data[0]] = number;
   };
-  CLIENTE.find(filter).select(select).sort(order).exec((err,docs)=>{
+  CLIENTE.find(filter).select(select).sort(order).exec((err,doc)=>{
     if (err){
       res.status(500).json({msn : "Error en el servidor."});
       return;
     };
-    res.status(200).json({docs});
+    res.status(200).json(doc);
+    //console.log(doc);
     return;
   });
 });
